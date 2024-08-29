@@ -1,0 +1,84 @@
+#include <iostream>
+
+const int S = 3;
+char b[S][S] = {
+    {' ', ' ', ' '},
+    {' ', ' ', ' '},
+    {' ', ' ', ' '}
+};
+void printBoard() {
+    std::cout << "  1 2 3\n";
+    for (int i = 0; i < S; ++i) {
+        std::cout << i + 1 << ' ';
+        for (int j = 0; j < S; ++j) {
+            std::cout << b[i][j];
+            if (j < S - 1) std::cout << '|';
+        }
+        std::cout << '\n';
+        if (i < S - 1) std::cout << "  -----\n";
+    }
+}
+bool BoardFull() {
+    for (int i = 0; i < S; ++i) {
+        for (int j = 0; j < S; ++j) {
+            if (b[i][j] == ' ') {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+bool Win(char p) {
+    for (int i = 0; i < S; ++i) {
+        if (b[i][0] == p && b[i][1] == p && b[i][2] == p) {
+            return true;
+        }
+    }
+    for (int i = 0; i < S; ++i) {
+        if (b[0][i] == p && b[1][i] == p && b[2][i] == p) {
+            return true;
+        }
+    }
+    if (b[0][0] == p && b[1][1] == p && b[2][2] == p) {
+        return true;
+    }
+    if (b[0][2] == p && b[1][1] == p && b[2][0] == p) {
+        return true;
+    }
+    return false;
+}
+bool isValidMove(int row, int col) {
+    return row >= 0 && row < S && col >= 0 && col < S && b[row][col] == ' ';
+}
+void makeMove(int row, int col, char p) {
+    b[row][col] = p;
+}
+int main() {
+    char CurrentPlayer = 'X';
+    int row, col;
+    std::cout << "Welcome to Tic-Tac-Toe!\n";
+    printBoard();
+    while (true) {
+        std::cout << "Player " << CurrentPlayer << ", enter your move (row and column): ";
+        std::cin >> row >> col;
+        row--;
+        col--;
+        if (!isValidMove(row, col)) {
+            std::cout << "Invalid move. Try again.\n";
+            continue;
+        }
+        makeMove(row, col, CurrentPlayer);
+        printBoard();
+        if (Win(CurrentPlayer)) {
+            std::cout << "Player " << CurrentPlayer << " wins the game..!\n";
+            break;
+        }
+        if (BoardFull()) {
+            std::cout << "The game is a draw!\n Better luck next time !";
+            break;
+        }
+        CurrentPlayer = (CurrentPlayer == 'X') ? 'O' : 'X';
+    }
+
+    return 0;
+}
